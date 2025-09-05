@@ -20,7 +20,9 @@ const BankCard = ({
           </p>
           <div className="flex justify-between items-center mt-2">
             <div>
-              <h1 className="text-sm font-semibold uppercase">{userName}</h1>
+              <h1 className="text-sm font-semibold uppercase">
+                {account.name}
+              </h1>
               <p className="text-xs">11 / 27</p>
             </div>
             <Image

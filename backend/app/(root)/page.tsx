@@ -6,6 +6,7 @@ import { email } from "zod";
 import { getLoggedInUser } from "@/lib/actions/user.actions";
 import { getAccount, getAccounts } from "@/lib/actions/bank.actions";
 import RecentTransactions from "@/components/RecentTransactions";
+import { Pagination } from "@/components/Pagination";
 
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
   const currentPage = Number(page as string) || 1;
@@ -20,6 +21,17 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
     (id as string) || accountsData[0]?.appwriteItemId || null;
 
   const account = await getAccount({ appwriteItemId });
+
+  const rowsPerPage = 10;
+
+  const totalPages = Math.ceil(account?.transactions.length / rowsPerPage);
+
+  const indexOfLastTransaction = currentPage * rowsPerPage;
+  const indexOfFirstTransaction = indexOfLastTransaction - rowsPerPage;
+  const currentTransactions = account?.transactions.slice(
+    indexOfFirstTransaction,
+    indexOfLastTransaction
+  );
 
   return (
     <section className="home flex flex-row gap-4">
@@ -56,6 +68,12 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
           banks={accountsData?.slice(0, 2)}
         />
       </aside>
+
+      {totalPages > 1 && (
+        <div className="mt-4 flex justify-end">
+          <Pagination totalPages={totalPages} page={currentPage} />
+        </div>
+      )}
     </section>
   );
 };
